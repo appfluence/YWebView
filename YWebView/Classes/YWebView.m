@@ -122,21 +122,21 @@
     [self.messageHandlerNames addObject:name];
 }
 
-- (WKNavigation*)loadRequest:(NSURLRequest*)originalRequest
+- (WKNavigation *)loadRequest:(NSURLRequest*)originalRequest
 {
     NSString *validDomain = originalRequest.URL.host;
-
     if (validDomain.length <= 0) {
         // hasSuffix requires non-nil string
         return [super loadRequest:originalRequest];
-    } 
+    }
+    [self removeCookies:nil];
 
     NSMutableURLRequest *request = [originalRequest mutableCopy];
 
     const BOOL requestIsSecure = [request.URL.scheme isEqualToString:@"https"];
 
     NSMutableArray *array = [NSMutableArray array];
-    for (NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies]) {
+    for (NSHTTPCookie *cookie in NSHTTPCookieStorage.sharedHTTPCookieStorage.cookies) {
         // Don't even bother with values containing a `'`
         if ([cookie.name rangeOfString:@"'"].location != NSNotFound) {
             //NSLog(@"Skipping %@ because it contains a '", cookie.properties);
@@ -290,7 +290,9 @@
 }
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
-    [_yNavigationDelegate webView:webView didFinishNavigation:navigation];
+    [self saveCookies:^{
+        [self.yNavigationDelegate webView:webView didFinishNavigation:navigation];
+    }];
 }
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error {
