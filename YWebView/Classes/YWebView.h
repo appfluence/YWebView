@@ -11,7 +11,9 @@
 
 @interface YWebView : WKWebView
 
-- (nonnull instancetype)initWithFrame:(CGRect)frame configuration:(nullable WKWebViewConfiguration*)theConfiguration NS_DESIGNATED_INITIALIZER;
+@property(nullable, nonatomic, weak) id<WKNavigationDelegate> yNavigationDelegate;
+
+- (nonnull instancetype)initWithFrame:(CGRect)frame configuration:(nullable WKWebViewConfiguration *)theConfiguration NS_DESIGNATED_INITIALIZER;
 - (nonnull WKNavigation*)loadRequest:(nonnull NSURLRequest*)request;
 
 // workaround http://stackoverflow.com/questions/31094110/memory-leak-when-using-wkscriptmessagehandler
