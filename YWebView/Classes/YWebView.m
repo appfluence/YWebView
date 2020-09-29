@@ -166,7 +166,7 @@
 }
 
 - (void)removeCookies:(nullable void (^)(void))completion {
-    if (@available(iOS 11.0, *)) {
+    if (@available(macOS 10.13, iOS 11.0, *)) {
         WKWebsiteDataStore *store = WKWebsiteDataStore.defaultDataStore;
         [store.httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull cookies) {
             for (NSHTTPCookie *cookie in cookies) {
@@ -180,7 +180,7 @@
         return;
     }
 
-    if (@available(iOS 9.0, *)) {
+    if (@available(macOS 10.11, iOS 9.0, *)) {
         NSSet *websiteDataTypes = [NSSet setWithArray:@[WKWebsiteDataTypeCookies]];
         NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
         [WKWebsiteDataStore.defaultDataStore removeDataOfTypes:websiteDataTypes
@@ -194,7 +194,7 @@
 }
 
 - (void)saveCookies:(nullable void (^)(void))completion {
-    if (@available(iOS 11.0, *)) {
+    if (@available(macOS 10.13, iOS 11.0, *)) {
         WKWebsiteDataStore *store = WKWebsiteDataStore.defaultDataStore;
         [store.httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull cookies) {
             for (NSHTTPCookie *cookie in cookies) {
@@ -304,11 +304,14 @@
 }
 
 - (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView API_AVAILABLE(macos(10.11), ios(9.0)) {
+    if (@available(macOS 10.11, iOS 9.0, *))
     [_yNavigationDelegate webViewWebContentProcessDidTerminate:webView];
 }
 
-- (void)webView:(WKWebView *)webView authenticationChallenge:(NSURLAuthenticationChallenge *)challenge shouldAllowDeprecatedTLS:(void (^)(BOOL))decisionHandler API_AVAILABLE(macos(11.0), ios(14.0)) {
-    [_yNavigationDelegate webView:webView authenticationChallenge:challenge shouldAllowDeprecatedTLS:decisionHandler];
+- (void)webView:(WKWebView *)webView authenticationChallenge:(NSURLAuthenticationChallenge *)challenge shouldAllowDeprecatedTLS:(void (^)(BOOL))decisionHandler {
+    if (@available(macOS 11.0, iOS 14.0, *)) {
+        [_yNavigationDelegate webView:webView authenticationChallenge:challenge shouldAllowDeprecatedTLS:decisionHandler];
+    }
 }
 
 @end
