@@ -165,6 +165,51 @@
     return [super loadRequest:request];
 }
 
+- (void)removeCookies:(nullable void (^)(void))completion {
+    if (@available(iOS 11.0, *)) {
+        WKWebsiteDataStore *store = WKWebsiteDataStore.defaultDataStore;
+        [store.httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull cookies) {
+            for (NSHTTPCookie *cookie in cookies) {
+                [store.httpCookieStore deleteCookie:cookie completionHandler:^{}];
+            }
+
+            if (completion) {
+                completion();
+            }
+        }];
+        return;
+    }
+
+    if (@available(iOS 9.0, *)) {
+        NSSet *websiteDataTypes = [NSSet setWithArray:@[WKWebsiteDataTypeCookies]];
+        NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
+        [WKWebsiteDataStore.defaultDataStore removeDataOfTypes:websiteDataTypes
+                                                 modifiedSince:dateFrom
+                                             completionHandler:^{}];
+    }
+
+    if (completion) {
+        completion();
+    }
+}
+
+- (void)saveCookies:(nullable void (^)(void))completion {
+    if (@available(iOS 11.0, *)) {
+        WKWebsiteDataStore *store = WKWebsiteDataStore.defaultDataStore;
+        [store.httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull cookies) {
+            for (NSHTTPCookie *cookie in cookies) {
+                [NSHTTPCookieStorage.sharedHTTPCookieStorage setCookie:cookie];
+            }
+
+            if (completion) {
+                completion();
+            }
+        }];
+    } else if (completion) {
+        completion();
+    }
+}
+
 #pragma mark - private
 + (void)addCookieInScriptWithController:(WKUserContentController*)userContentController
 {
