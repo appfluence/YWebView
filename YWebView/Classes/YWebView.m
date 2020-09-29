@@ -262,49 +262,71 @@
 #pragma mark - WKNavigationDelegate
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
-    [_yNavigationDelegate webView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
+    if ([_yNavigationDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)]) {
+        [_yNavigationDelegate webView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
+    }
 }
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction preferences:(WKWebpagePreferences *)preferences decisionHandler:(void (^)(WKNavigationActionPolicy, WKWebpagePreferences *))decisionHandler API_AVAILABLE(macos(10.15), ios(13.0)); {
-    [_yNavigationDelegate webView:webView decidePolicyForNavigationAction:navigationAction preferences:preferences decisionHandler:decisionHandler];
+    if ([_yNavigationDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:preferences:decisionHandler:)]) {
+        [_yNavigationDelegate webView:webView decidePolicyForNavigationAction:navigationAction preferences:preferences decisionHandler:decisionHandler];
+    }
 }
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler {
-    [_yNavigationDelegate webView:webView decidePolicyForNavigationResponse:navigationResponse decisionHandler:decisionHandler];
+    if ([_yNavigationDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationResponse:decisionHandler:)]) {
+        [_yNavigationDelegate webView:webView decidePolicyForNavigationResponse:navigationResponse decisionHandler:decisionHandler];
+    }
 }
 
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation {
-    [_yNavigationDelegate webView:webView didStartProvisionalNavigation:navigation];
+    if ([_yNavigationDelegate respondsToSelector:@selector(webView:didStartProvisionalNavigation:)]) {
+        [_yNavigationDelegate webView:webView didStartProvisionalNavigation:navigation];
+    }
 }
 
 - (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(null_unspecified WKNavigation *)navigation {
-    [_yNavigationDelegate webView:webView didReceiveServerRedirectForProvisionalNavigation:navigation];
+    if ([_yNavigationDelegate respondsToSelector:@selector(webView:didReceiveServerRedirectForProvisionalNavigation:)]) {
+        [_yNavigationDelegate webView:webView didReceiveServerRedirectForProvisionalNavigation:navigation];
+    }
 }
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error {
-    [_yNavigationDelegate webView:webView didFailProvisionalNavigation:navigation withError:error];
+    if ([_yNavigationDelegate respondsToSelector:@selector(webView:didFailProvisionalNavigation:withError:)]) {
+        [_yNavigationDelegate webView:webView didFailProvisionalNavigation:navigation withError:error];
+    }
 }
 
 - (void)webView:(WKWebView *)webView didCommitNavigation:(null_unspecified WKNavigation *)navigation {
-    [_yNavigationDelegate webView:webView didCommitNavigation:navigation];
+    if ([_yNavigationDelegate respondsToSelector:@selector(webView:didCommitNavigation:)]) {
+        [_yNavigationDelegate webView:webView didCommitNavigation:navigation];
+    }
 }
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
     [self saveCookies:^{
-        [self.yNavigationDelegate webView:webView didFinishNavigation:navigation];
+        if ([self.yNavigationDelegate respondsToSelector:@selector(webView:didFinishNavigation:)]) {
+            [self.yNavigationDelegate webView:webView didFinishNavigation:navigation];
+        }
     }];
 }
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error {
-    [_yNavigationDelegate webView:webView didFailNavigation:navigation withError:error];
+    if ([_yNavigationDelegate respondsToSelector:@selector(webView:didFailNavigation:withError:)]) {
+        [_yNavigationDelegate webView:webView didFailNavigation:navigation withError:error];
+    }
 }
 
 - (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler {
-    [_yNavigationDelegate webView:webView didReceiveAuthenticationChallenge:challenge completionHandler:completionHandler];
+    if ([_yNavigationDelegate respondsToSelector:@selector(webView:didReceiveAuthenticationChallenge:completionHandler:)]) {
+        [_yNavigationDelegate webView:webView didReceiveAuthenticationChallenge:challenge completionHandler:completionHandler];
+    }
 }
 
 - (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView API_AVAILABLE(macos(10.11), ios(9.0)) {
-    [_yNavigationDelegate webViewWebContentProcessDidTerminate:webView];
+    if ([_yNavigationDelegate respondsToSelector:@selector(webViewWebContentProcessDidTerminate:)]) {
+        [_yNavigationDelegate webViewWebContentProcessDidTerminate:webView];
+    }
 }
 
 @end
