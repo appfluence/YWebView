@@ -86,7 +86,6 @@
 
 - (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)theConfiguration
 {
-    self.navigationDelegate = self;
     YMessageHandler* handler = [[YMessageHandler alloc] init];
 
     WKWebViewConfiguration* configuration = theConfiguration ?: [[WKWebViewConfiguration alloc] init];
@@ -100,6 +99,7 @@
     [YWebView addCookieOutScriptWithController:controller handler:handler]; // will add Y_HANDLER_NAME here
 
     if (self = [super initWithFrame:frame configuration:configuration]) {
+        self.navigationDelegate = self;
         _theConfiguration = configuration;
         _messageHandlerNames = [[NSMutableArray alloc] init];
         _messageHandler = handler;
