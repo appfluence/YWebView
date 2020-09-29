@@ -304,14 +304,7 @@
 }
 
 - (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView API_AVAILABLE(macos(10.11), ios(9.0)) {
-    if (@available(macOS 10.11, iOS 9.0, *))
     [_yNavigationDelegate webViewWebContentProcessDidTerminate:webView];
-}
-
-- (void)webView:(WKWebView *)webView authenticationChallenge:(NSURLAuthenticationChallenge *)challenge shouldAllowDeprecatedTLS:(void (^)(BOOL))decisionHandler {
-    if (@available(macOS 11.0, iOS 14.0, *)) {
-        [_yNavigationDelegate webView:webView authenticationChallenge:challenge shouldAllowDeprecatedTLS:decisionHandler];
-    }
 }
 
 @end
