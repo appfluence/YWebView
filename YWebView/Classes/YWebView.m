@@ -122,6 +122,7 @@
     [self.messageHandlerNames addObject:name];
 }
 
+
 - (WKNavigation *)loadRequest:(NSURLRequest*)originalRequest
 {
     NSString *validDomain = originalRequest.URL.host;
@@ -129,7 +130,7 @@
         // hasSuffix requires non-nil string
         return [super loadRequest:originalRequest];
     }
-    [self removeCookies:nil];
+    [self readCookies:nil];
 
     NSMutableURLRequest *request = [originalRequest mutableCopy];
 
@@ -193,12 +194,28 @@
     }
 }
 
+- (void)readCookies:(nullable void (^)(void))completion {
+    [self removeCookies:^{
+        if (@available(macOS 10.13, iOS 11.0, *)) {
+            NSArray *cookies = NSHTTPCookieStorage.sharedHTTPCookieStorage.cookies;
+            NSHTTPCookie *last = cookies.lastObject;
+            for (NSHTTPCookie *cookie in NSHTTPCookieStorage.sharedHTTPCookieStorage.cookies) {
+                WKWebsiteDataStore *store = WKWebsiteDataStore.defaultDataStore;
+                [store.httpCookieStore setCookie:cookie completionHandler:cookie == last ? completion : nil];
+            }
+        } if (completion) {
+            completion();
+        }
+    }];
+}
+
 - (void)saveCookies:(nullable void (^)(void))completion {
     if (@available(macOS 10.13, iOS 11.0, *)) {
         WKWebsiteDataStore *store = WKWebsiteDataStore.defaultDataStore;
         [store.httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull cookies) {
             for (NSHTTPCookie *cookie in cookies) {
                 [NSHTTPCookieStorage.sharedHTTPCookieStorage setCookie:cookie];
+
             }
 
             if (completion) {
